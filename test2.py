@@ -1,5 +1,4 @@
 def shunt(infix):
-
     specials = {'*': 50, '.': 40, '|': 30}
 
     pofix = ""
@@ -7,7 +6,7 @@ def shunt(infix):
 
     for c in infix:
         if c == '(':
-            stack = stack+c
+            stack = stack + c
         elif c == ')':
             while stack[-1] != '(':
                 pofix = pofix + stack[-1]
@@ -25,10 +24,12 @@ def shunt(infix):
 
     return pofix
 
+
 class state:
     label = None
     edge1 = None
     edge2 = None
+
 
 class nfa:
     initial = None
@@ -37,6 +38,7 @@ class nfa:
     def __init__(self, initial, accept):
         self.initial = initial
         self.accept = accept
+
 
 def compile(pofix):
     nfastack = []
@@ -113,6 +115,7 @@ def follows(state):
 
     return states
 
+
 def match(infix, string):
     """Matches string to infix regular expression"""
 
@@ -132,7 +135,7 @@ def match(infix, string):
         # loop through the current set of states
         for c in current:
             # check if that state is labelled s
-            if c.label ==s:
+            if c.label == s:
                 # add the edge1 state to the next set
                 next |= follows(c.edge1)
         # set current to next, and clear out next
@@ -140,12 +143,15 @@ def match(infix, string):
         next = set()
 
     # check if the accept state is in the set of current states
-    return (nfa.accept in current)
+    return nfa.accept in current
+
 
 # a few tests
-infixes = ["a.b.c*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c"]
+infixes = ["a*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c", "a*", "a*"]
 strings = ["", "abc", "abbc", "abcc", "abad", "abbbc"]
 
-for i in infixes:
-    for s in strings:
-        print(match(i, s), i, s)
+
+# ZIP Method
+for exp, string in zip(infixes, strings):
+    print(match(exp, string), exp, string)
+
