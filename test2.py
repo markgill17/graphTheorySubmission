@@ -98,14 +98,18 @@ def follows(state):
     """Return the set of states that can be reached from state following e arrows"""
     # create a new set, with state as its only member
     states = set()
-    set.add(state)
+    states.add(state)
 
     # check if state has arrows labelled e from it
     if state.label is None:
-        # if there's an edge1, follow it
-        states |= follows(state.edge1)
-        # if there's an edge2, follow it
-        states |= follows(state.edge2)
+        # check if edge1 is a state
+        if state.edge1 is not None:
+            # if there's an edge1, follow it
+            states |= follows(state.edge1)
+        # check if edge1 is a state
+        if state.edge2 is not None:
+            # if there's an edge2, follow it
+            states |= follows(state.edge2)
 
     return states
 
@@ -128,7 +132,9 @@ def match(infix, string):
         # loop through the current set of states
         for c in current:
             # check if that state is labelled s
-            next |= follows(c.edge1)
+            if c.label ==s:
+                # add the edge1 state to the next set
+                next |= follows(c.edge1)
         # set current to next, and clear out next
         current = next
         next = set()
@@ -138,7 +144,7 @@ def match(infix, string):
 
 # a few tests
 infixes = ["a.b.c*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c"]
-strings = ["", "abc", "abbc", "abad", "abbbc"]
+strings = ["", "abc", "abbc", "abcc", "abad", "abbbc"]
 
 for i in infixes:
     for s in strings:
