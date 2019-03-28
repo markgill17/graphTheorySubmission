@@ -120,8 +120,21 @@ def match(infix, string):
     current = set()
     next = set()
 
+    # add the initial state to the current state
+    current |= follows(nfa.initial)
+
     # Loop through each character in the string
     for s in string:
+        # loop through the current set of states
+        for c in current:
+            # check if that state is labelled s
+            next |= follows(c.edge1)
+        # set current to next, and clear out next
+        current = next
+        next = set()
+
+    # check if the accept state is in the set of current states
+    return (nfa.accept in current)
 
 # a few tests
 infixes = ["a.b.c*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c"]
