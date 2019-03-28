@@ -102,7 +102,12 @@ def follows(state):
 
     # check if state has arrows labelled e from it
     if state.label is None:
+        # if there's an edge1, follow it
+        states |= follows(state.edge1)
+        # if there's an edge2, follow it
+        states |= follows(state.edge2)
 
+    return states
 
 def match(infix, string):
     """Matches string to infix regular expression"""
