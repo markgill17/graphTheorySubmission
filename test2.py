@@ -1,5 +1,5 @@
 def shunt(infix):
-    specials = {'*': 50, '.': 40, '|': 30}
+    specials = {'*': 50, '.': 40, '+': 30, '-': 30, '|': 20}
 
     pofix = ""
     stack = ""
@@ -79,8 +79,12 @@ def compile(pofix):
             # join the new initial state to nfa1's initial state and the new accept state
             initial.edge1 = nfa1.initial
             initial.edge2 = accept
+            # join the old accept state to the new accept state and nfa1's initial state
+            nfa1.accept.edge1 = nfa1.initial
+            nfa1.accept.edge2 = accept
             # push new nfa to the stack
-            nfastack.append(nfa(initial, accept))
+            newnfa = nfa(initial, accept)
+            nfastack.append(newnfa)
 
         else:
             # create new initial and accept states
@@ -147,11 +151,14 @@ def match(infix, string):
 
 
 # a few tests
-infixes = ["a*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c", "a*", "a*"]
+infixes = ["a.b.c*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c*"]
 strings = ["", "abc", "abbc", "abcc", "abad", "abbbc"]
 
-
 # ZIP Method
-for exp, string in zip(infixes, strings):
-    print(match(exp, string), exp, string)
+# for exp, string in zip(infixes, strings):
+#  print(match(exp, string), exp, string)
 
+
+for i in infixes:
+    for s in strings:
+        print(match(i, s), i, s)
