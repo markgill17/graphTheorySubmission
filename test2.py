@@ -1,36 +1,46 @@
 def shunt(infix):
+    # special characters for regular expressions and their precedence
     specials = {'*': 50, '.': 40, '+': 30, '-': 30, '|': 20}
 
+    # this will be the output
     pofix = ""
+    # the operater stack
     stack = ""
 
+    # loop through the string, one character at a time
     for c in infix:
+        # if there is an open bracket, push to the stack
         if c == '(':
             stack = stack + c
+        # if there is a closing bracket, pop from the stack
         elif c == ')':
             while stack[-1] != '(':
                 pofix = pofix + stack[-1]
                 stack = stack[:-1]
             stack = stack[:-1]
+        # if it's an operator, push to stack after popping lower or
+        # equal precedence operators from the top of the stack into output
         elif c in specials:
             while stack and specials.get(c, 0) <= specials.get(stack[-1], 0):
                 pofix, stack = pofix + stack[-1], stack[:-1]
             stack = stack + c
         else:
             pofix = pofix + c
-
+    # pop all remaining operators from stack to output
     while stack:
         pofix, stack = pofix + stack[-1], stack[:-1]
 
+    # return postfix
     return pofix
 
-
+# this shows the states of the arrows
+# None is used for E arrows
 class state:
     label = None
     edge1 = None
     edge2 = None
 
-
+# an NFA is represented by its initial and accept states
 class nfa:
     initial = None
     accept = None
@@ -155,10 +165,10 @@ infixes = ["a.b.c*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c*"]
 strings = ["", "abc", "abbc", "abcc", "abad", "abbbc"]
 
 # ZIP Method
-# for exp, string in zip(infixes, strings):
-#  print(match(exp, string), exp, string)
+for exp, string in zip(infixes, strings):
+ print(match(exp, string), exp, string)
+#print(list(zip(infixes,strings)))
 
-
-for i in infixes:
-    for s in strings:
-        print(match(i, s), i, s)
+#for i in infixes:
+ #   for s in strings:
+  #      print(match(i, s), i, s)
