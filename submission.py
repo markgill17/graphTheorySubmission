@@ -143,11 +143,11 @@ def follows(state):
 def match(infix, string):
     """Matches string to infix regular expression"""
 
-    # Shunt and compie the regular expression
+    # Shunt and compile the regular expression
     postfix = shunt(infix)
     nfa = compile(postfix)
 
-    # The current set of states and the next set set of states
+    # The current set of states and the next set of states
     current = set()
     next = set()
 
@@ -183,6 +183,7 @@ strings = ["", "abc", "abbc", "abcc", "abad", "abbbc"]
 
 
 # print output
+# this function matches each infix to every string
 for i in infixes:
     for s in strings:
         print(match(i, s), i, s)
@@ -190,5 +191,5 @@ for i in infixes:
 
 # allowing users to test their own infixes and strings
 infixes = input("Enter an infix: ")
-strings = input("Enter an infix: ")
+strings = input("Enter a string: ")
 print(match(infixes, strings), infixes, strings)
