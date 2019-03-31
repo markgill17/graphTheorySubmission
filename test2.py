@@ -1,10 +1,14 @@
+# The shunting yard algorithm
+# Used to convert infix expressions to postfix
+
+
 def shunt(infix):
     # special characters for regular expressions and their precedence
     specials = {'*': 50, '.': 40, '+': 30, '-': 30, '|': 20}
 
     # this will be the output
-    pofix = ""
-    # the operater stack
+    postfix = ""
+    # the operator stack
     stack = ""
 
     # loop through the string, one character at a time
@@ -15,32 +19,36 @@ def shunt(infix):
         # if there is a closing bracket, pop from the stack
         elif c == ')':
             while stack[-1] != '(':
-                pofix = pofix + stack[-1]
+                postfix = postfix + stack[-1]
                 stack = stack[:-1]
             stack = stack[:-1]
         # if it's an operator, push to stack after popping lower or
         # equal precedence operators from the top of the stack into output
         elif c in specials:
             while stack and specials.get(c, 0) <= specials.get(stack[-1], 0):
-                pofix, stack = pofix + stack[-1], stack[:-1]
+                postfix, stack = postfix + stack[-1], stack[:-1]
             stack = stack + c
         else:
-            pofix = pofix + c
+            postfix = postfix + c
     # pop all remaining operators from stack to output
     while stack:
-        pofix, stack = pofix + stack[-1], stack[:-1]
+        postfix, stack = postfix + stack[-1], stack[:-1]
 
     # return postfix
-    return pofix
+    return postfix
 
 # this shows the states of the arrows
 # None is used for E arrows
+
+
 class state:
     label = None
     edge1 = None
     edge2 = None
 
 # an NFA is represented by its initial and accept states
+
+
 class nfa:
     initial = None
     accept = None
@@ -48,6 +56,8 @@ class nfa:
     def __init__(self, initial, accept):
         self.initial = initial
         self.accept = accept
+
+# This compiles postfix regular expressions into an NFA
 
 
 def compile(pofix):
@@ -165,10 +175,20 @@ infixes = ["a.b.c*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c*"]
 strings = ["", "abc", "abbc", "abcc", "abad", "abbbc"]
 
 # ZIP Method
-for exp, string in zip(infixes, strings):
- print(match(exp, string), exp, string)
-#print(list(zip(infixes,strings)))
+# for exp, string in zip(infixes, strings):
+#     print(match(exp, string), exp, string)
 
-#for i in infixes:
- #   for s in strings:
-  #      print(match(i, s), i, s)
+# list method
+# print(list(zip(infixes, strings)))
+
+
+# print output
+for i in infixes:
+    for s in strings:
+        print(match(i, s), i, s)
+
+
+# allowing users to test their own infixes and strings
+infixes = input("Enter an infix: ")
+strings = input("Enter an infix: ")
+print(match(infixes, strings), infixes, strings)
